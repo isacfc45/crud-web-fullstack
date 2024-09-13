@@ -1,22 +1,20 @@
-import Firebird from "node-firebird";
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
 
-const options: Firebird.Options = {
-  host: "127.0.0.1",
-  port: 30500,
-  database: "/firebird/data/db2.fdb",
-  user: "sysdba",
-  password: "masterkey",
-  pageSize: 4096,
+// Opções de configuração para SQLite
+const options = {
+  filename: './DB.sqlite',
+  driver: sqlite3.Database,
 };
 
-export const getDatabaseConnection = (): Promise<Firebird.Database> => {
-  return new Promise((resolve, reject) => {
-    Firebird.attach(options, (err, db) => {
-      if (err) {
-        reject(err.message);
-      } else {
-        resolve(db);
-      }
-    });
-  });
+// Função para obter a conexão com o banco de dados
+export const getDatabaseConnection = async () => {
+  try {
+    const db = await open(options);
+    console.log('Conexão com o banco de dados SQLite estabelecida!');
+    return db;
+  } catch (err) {
+    console.error('Erro ao conectar com o banco de dados:', err.message);
+    throw err;
+  }
 };

@@ -5,23 +5,23 @@ import { getDatabaseConnection } from "@/main/config";
 export class PersonRepositoryImpl implements PersonRepository {
   async create(person: Person): Promise<number> {
     const db = await getDatabaseConnection();
+  
     return new Promise((resolve, reject) => {
-      db.query(
-        "INSERT INTO PEOPLE (NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?) RETURNING ID",
+      db.run(
+        "INSERT INTO PEOPLE (NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?)",
         [person.name, person.nickname, person.taxType, person.cpfCnpj],
-        (err, result) => {
-          db.detach();
+        function (err) {
           if (err) {
             console.log(err);
             reject(err);
           } else {
-            resolve(result[0].ID);
+            // `this.lastID` contém o ID da última linha inserida
+            resolve(this.lastID);
           }
         }
       );
     });
   }
-
   async index(): Promise<Person[]> {
     const db = await getDatabaseConnection();
     return new Promise((resolve, reject) => {

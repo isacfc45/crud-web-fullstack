@@ -9,6 +9,7 @@ export const config = {
 
 export const POST = async (req: NextApiRequest) => {
   const data = await new Response(req.body).json();
+  console.log(Response.json(await personController.create(data)));
   return Response.json(await personController.create(data));
 };
 
