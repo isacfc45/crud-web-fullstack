@@ -4,18 +4,17 @@ import { PersonRepository } from "@/domain/repositories/PessoaRepository";
 export class CreatePersonUseCase {
   constructor(private personRepository: PersonRepository) {}
   async execute(data: {
-    id: number;
     name: string;
-    age: number;
-    email: string;
-    password: string;
+    nickname: string;
+    taxType: string;
+    cpfCnpj: string;
   }): Promise<number> {
     const pessoa = new Person(
-      data.id,
+      0,
       data.name,
-      data.age,
-      data.email,
-      data.password
+      data.nickname,
+      data.taxType,
+      data.cpfCnpj
     );
     const id = await this.personRepository.create(pessoa);
     return id;

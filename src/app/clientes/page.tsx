@@ -1,39 +1,40 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import Table from "../../components/Table/Table";
 import Button from "../../components/Button/Button";
 import Link from "next/link";
+import { Person } from "@/domain/entities/Person";
 
 const Clientes = () => {
-  const headers = ["ID", "Nome", "CPF/CNPJ", "Ações"];
-  const rows = [
-    [
-      "1",
-      "Fulano de Tal",
-      "123.456.789-00",
-      <Link key={"1"} href="/clientes/edit/1">
-        Detalhes
-      </Link>,
-    ],
-    [
-      "2",
-      "Ciclano de Tal",
-      "123.456.789-00",
-      <Link key={"2"} href="/clientes/edit/2">
-        Detalhes
-      </Link>,
-    ],
-    [
-      "3",
-      "Beltrano de Tal",
-      "123.456.789-00",
-      <Link key={3} href="/clientes/edit/3">
-        Detalhes
-      </Link>,
-    ],
-  ];
+  // Corrija o tipo de estado de useState para um array de Person
+  const [people, setPeople] = useState<Person[]>([]);
+
+  // Defina os headers da tabela
+  const headers = ["ID", "Nome", "Tipo Fiscal", "CPF/CNPJ"];
+
+  useEffect(() => {
+    async function fetchPeople() {
+      try {
+        const response = await fetch("/api/pessoas");
+        const data = await response.json();
+        setPeople(data); // Definir os dados no estado
+      } catch (error) {
+        console.error("Failed to fetch people:", error);
+      }
+    }
+
+    fetchPeople();
+  }, []);
+
+  // Mapeia a lista de pessoas para o formato de rows esperado pela tabela
+  const rows = people.map((person) => ({
+    id: person.id,
+    name: person.name,
+    taxType: person.taxType,
+    cpfCnpj: person.cpfCnpj,
+  }));
 
   return (
     <Layout>
@@ -43,6 +44,7 @@ const Clientes = () => {
           <Button onClick={() => {}}>Adicionar Cliente</Button>
         </Link>
       </div>
+      {/* Passe os headers e as linhas para o componente Table */}
       <Table headers={headers} rows={rows} />
     </Layout>
   );

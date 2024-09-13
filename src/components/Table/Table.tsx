@@ -2,7 +2,7 @@ import React from "react";
 
 interface TableProps {
   headers: string[];
-  rows: React.ReactNode[][];
+  rows: { id: number; name: string; taxType: string; cpfCnpj: string }[];
 }
 
 const Table = ({ headers, rows }: TableProps) => {
@@ -19,13 +19,12 @@ const Table = ({ headers, rows }: TableProps) => {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => (
-            <tr key={index} className="border-b text-center">
-              {row.map((cell, idx) => (
-                <td key={idx} className="py-2 px-4">
-                  {cell}
-                </td>
-              ))}
+          {rows.map((row) => (
+            <tr key={row.id}>
+              <td className="border px-4 py-2">{row.id}</td>
+              <td className="border px-4 py-2">{row.name}</td>
+              <td className="border px-4 py-2">{row.taxType}</td>
+              <td className="border px-4 py-2">{row.cpfCnpj}</td>
             </tr>
           ))}
         </tbody>

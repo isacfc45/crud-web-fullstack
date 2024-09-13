@@ -12,12 +12,37 @@ export class PersonRepositoryImpl implements PersonRepository {
         (err, result) => {
           db.detach();
           if (err) {
+            console.log(err);
             reject(err);
           } else {
             resolve(result[0].ID);
           }
         }
       );
+    });
+  }
+
+  async index(): Promise<Person[]> {
+    const db = await getDatabaseConnection();
+    return new Promise((resolve, reject) => {
+      db.query("SELECT * FROM PEOPLE", [], (err, result) => {
+        db.detach();
+        if (err) {
+          reject(err);
+        } else {
+          const people = result.map(
+            (row) =>
+              new Person(
+                row.ID,
+                row.NAME,
+                row.NICKNAME,
+                row.TAX_TYPE,
+                row.CPF_CNPJ
+              )
+          );
+          resolve(people);
+        }
+      });
     });
   }
 

@@ -1,9 +1,14 @@
-import { PersonController } from "@/app/adapters/controllers/PersonController";
+import { PersonController } from "@/adapters/controllers/PersonController";
 import { PersonRepositoryImpl } from "@/external/db/PersonRepositoryImpl";
-import { CreatePersonUseCase } from "@/usecases/pessoa/CreatePessoaUseCase";
+import { CreatePersonUseCase } from "@/usecases/pessoa/CreatePersonUseCase";
+import { IndexPersonUseCase } from "@/usecases/pessoa/IndexPersonUseCase";
 
 const personRepository = new PersonRepositoryImpl();
 const createPersonUseCase = new CreatePersonUseCase(personRepository);
-const personController = new PersonController(createPersonUseCase);
+const indexPersonUseCase = new IndexPersonUseCase(personRepository);
+const personController = new PersonController(
+  createPersonUseCase,
+  indexPersonUseCase
+);
 
 export { personController };
