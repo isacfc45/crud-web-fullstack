@@ -12,7 +12,6 @@ const EditCliente = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Lógica para atualizar o cliente...
     console.log("Cliente atualizado:", { nome, cpfCnpj, email });
   };
 

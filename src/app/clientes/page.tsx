@@ -8,10 +8,8 @@ import Link from "next/link";
 import { Person } from "@/domain/entities/Person";
 
 const Clientes = () => {
-  // Corrija o tipo de estado de useState para um array de Person
   const [people, setPeople] = useState<Person[]>([]);
 
-  // Defina os headers da tabela
   const headers = ["ID", "Nome", "Tipo Fiscal", "CPF/CNPJ"];
 
   useEffect(() => {
@@ -19,7 +17,7 @@ const Clientes = () => {
       try {
         const response = await fetch("/api/pessoas");
         const data = await response.json();
-        setPeople(data); // Definir os dados no estado
+        setPeople(data);
       } catch (error) {
         console.error("Failed to fetch people:", error);
       }
@@ -28,7 +26,6 @@ const Clientes = () => {
     fetchPeople();
   }, []);
 
-  // Mapeia a lista de pessoas para o formato de rows esperado pela tabela
   const rows = people.map((person) => ({
     id: person.id,
     name: person.name,
@@ -44,7 +41,6 @@ const Clientes = () => {
           <Button onClick={() => {}}>Adicionar Cliente</Button>
         </Link>
       </div>
-      {/* Passe os headers e as linhas para o componente Table */}
       <Table headers={headers} rows={rows} />
     </Layout>
   );
