@@ -10,7 +10,7 @@ import { Person } from "@/domain/entities/Person";
 const Clientes = () => {
   const [people, setPeople] = useState<Person[]>([]);
 
-  const headers = ["ID", "Nome", "Tipo Fiscal", "CPF/CNPJ"];
+  const headers = ["ID", "Nome", "Tipo Fiscal", "CPF/CNPJ", "Ações"];
 
   useEffect(() => {
     async function fetchPeople() {
@@ -31,6 +31,19 @@ const Clientes = () => {
     name: person.name,
     taxType: person.taxType,
     cpfCnpj: person.cpfCnpj,
+    acoes: (
+      <div className="flex justify-around">
+        <Link href={`/clientes/${person.id}`}>
+          <div>Visualizar</div>
+        </Link>
+        <Link href={`/clientes/edit/${person.id}`}>
+          <div>Editar</div>
+        </Link>
+        <Link href={`/clientes/delete/${person.id}`}>
+          <div>Excluir</div>
+        </Link>
+      </div>
+    ),
   }));
 
   return (

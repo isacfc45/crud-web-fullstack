@@ -5,9 +5,10 @@ import { getDatabaseConnection } from "@/main/config";
 export class AddressRepositoryImpl implements AddressRepository {
   async create(address: Address): Promise<number> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query(
-        "INSERT INTO ADDRESS (PUBLIC_PLACE, NUMBER, COMPLEMENT, NEUGHBORHOOD, CEP, CITY, STATE, COUNTRY, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING ID",
+
+    try {
+      const result = await db.run(
+        "INSERT INTO ADDRESS (PUBLIC_PLACE, NUMBER, COMPLEMENT, NEIGHBORHOOD, CEP, CITY, STATE, COUNTRY, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           address.publicPlace,
           address.number,
@@ -18,53 +19,52 @@ export class AddressRepositoryImpl implements AddressRepository {
           address.state,
           address.country,
           address.personId,
-        ],
-        (err, result) => {
-          db.detach();
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result[0].ID);
-          }
-        }
+        ]
       );
-    });
+
+      return result.lastID;
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
-  async findById(id: number): Promise<Address | undefined> {
+  async index(): Promise<Address[]> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM ADDRESS WHERE ID = ?", [id], (err, result) => {
-        db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          if (result.length === 0) {
-            resolve(undefined);
-          } else {
-            const address = new Address(
-              result[0].ID,
-              result[0].PUBLIC_PLACE,
-              result[0].NUMBER,
-              result[0].COMPLEMENT,
-              result[0].NEIGHBORHOOD,
-              result[0].CEP,
-              result[0].CITY,
-              result[0].STATE,
-              result[0].COUNTRY,
-              result[0].PERSON_ID
-            );
-            resolve(address);
-          }
-        }
-      });
-    });
+
+    try {
+      const result = await db.all("SELECT * FROM ADDRESS");
+
+      const addresses = result.map(
+        (row) =>
+          new Address(
+            row.id,
+            row.public_place,
+            row.number,
+            row.complement,
+            row.neighborhood,
+            row.cep,
+            row.city,
+            row.state,
+            row.country,
+            row.person_id
+          )
+      );
+
+      return addresses;
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
   async update(address: Address): Promise<void> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query(
+
+    try {
+      await db.run(
         "UPDATE ADDRESS SET PUBLIC_PLACE = ?, NUMBER = ?, COMPLEMENT = ?, NEIGHBORHOOD = ?, CEP = ?, CITY = ?, STATE = ?, COUNTRY = ?, PERSON_ID = ? WHERE ID = ?",
         [
           address.publicPlace,
@@ -77,30 +77,24 @@ export class AddressRepositoryImpl implements AddressRepository {
           address.country,
           address.personId,
           address.id,
-        ],
-        (err) => {
-          db.detach();
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        }
+        ]
       );
-    });
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
   async delete(id: number): Promise<void> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query("DELETE FROM ADDRESS WHERE ID = ?", [id], (err) => {
-        db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+
+    try {
+      await db.run("DELETE FROM ADDRESS WHERE ID = ?", [id]);
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 }

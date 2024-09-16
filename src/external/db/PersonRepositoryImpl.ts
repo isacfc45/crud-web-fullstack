@@ -5,107 +5,100 @@ import { getDatabaseConnection } from "@/main/config";
 export class PersonRepositoryImpl implements PersonRepository {
   async create(person: Person): Promise<number> {
     const db = await getDatabaseConnection();
-  
-    return new Promise((resolve, reject) => {
-      db.run(
-        "INSERT INTO PEOPLE (NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?)",
-        [person.name, person.nickname, person.taxType, person.cpfCnpj],
-        function (err) {
-          if (err) {
-            console.log(err);
-            reject(err);
-          } else {
-            // `this.lastID` contém o ID da última linha inserida
-            resolve(this.lastID);
-          }
-        }
+
+    try {
+      const result = await db.run(
+        "INSERT INTO PERSON (NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?)",
+        [person.name, person.nickname, person.taxType, person.cpfCnpj]
       );
-    });
+
+      return result.lastID;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      db.close();
+    }
   }
+
   async index(): Promise<Person[]> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM PEOPLE", [], (err, result) => {
-        db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          const people = result.map(
-            (row) =>
-              new Person(
-                row.ID,
-                row.NAME,
-                row.NICKNAME,
-                row.TAX_TYPE,
-                row.CPF_CNPJ
-              )
-          );
-          resolve(people);
-        }
-      });
-    });
+
+    try {
+      const result = await db.all("SELECT * FROM PERSON");
+
+      const people = result.map(
+        (row) =>
+          new Person(row.id, row.name, row.nickname, row.tax_type, row.cpf_cnpj)
+      );
+
+      return people;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
   async findById(id: number): Promise<Person | undefined> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM PEOPLE WHERE ID = ?", [id], (err, result) => {
-        db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          if (result.length === 0) {
-            resolve(undefined);
-          } else {
-            const person = new Person(
-              result[0].ID,
-              result[0].NAME,
-              result[0].NICKNAME,
-              result[0].TAX_TYPE,
-              result[0].CPF_CNPJ
-            );
-            resolve(person);
-          }
-        }
-      });
-    });
+
+    try {
+      const result = await db.get("SELECT * FROM PERSON WHERE ID = ?", [id]);
+
+      if (!result) {
+        return undefined;
+      }
+
+      const person = new Person(
+        result.id,
+        result.name,
+        result.nickname,
+        result.tax_type,
+        result.cpf_cnpj
+      );
+
+      return person;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
   async update(person: Person): Promise<void> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query(
-        "UPDATE PEOPLE SET NAME = ?, NICKNAME = ?, TAX-TYPE = ?, CPF-CNPJ = ? WHERE ID = ?",
+
+    try {
+      await db.run(
+        "UPDATE PERSON SET NAME = ?, NICKNAME = ?, TAX_TYPE = ?, CPF_CNPJ = ? WHERE ID = ?",
         [
           person.name,
           person.nickname,
           person.taxType,
           person.cpfCnpj,
           person.id,
-        ],
-        (err) => {
-          db.detach();
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        }
+        ]
       );
-    });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      db.close();
+    }
   }
-
   async delete(id: number): Promise<void> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query("DELETE FROM PEOPLE WHERE ID = ?", [id], (err) => {
-        db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+
+    try {
+      await db.run("DELETE FROM PERSON WHERE ID = ?", [id]);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 }
