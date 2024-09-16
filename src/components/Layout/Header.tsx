@@ -8,18 +8,22 @@ const Header = () => (
       <h1 className="text-xl font-bold">Sistema de Gestão de Clientes</h1>
       <nav>
         <div>
-          <Button
-            onClick={() => {}}
-            className="bg-white text-blue-600 hover:text-white font-bold py-2 px-4 rounded me-4"
-          >
-            <Link href="/">Home</Link>
-          </Button>
-          <Button
-            onClick={() => {}}
-            className="bg-white hover:text-white text-blue-600 font-bold py-2 px-4 rounded"
-          >
-            <Link href="/clientes">Clientes</Link>
-          </Button>
+          <Link href="/">
+            <Button
+              onClick={() => {}}
+              className="bg-white text-black hover:text-white font-bold py-2 px-4 rounded me-4"
+            >
+              Home
+            </Button>
+          </Link>
+          <Link href="/clientes">
+            <Button
+              onClick={() => {}}
+              className="bg-white text-black hover:text-white font-bold py-2 px-4 rounded me-4"
+            >
+              Clientes
+            </Button>
+          </Link>
         </div>
       </nav>
     </div>

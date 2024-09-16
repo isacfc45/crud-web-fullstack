@@ -13,7 +13,6 @@ const CreateCliente = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(person);
 
     try {
       const response = await fetch("/api/pessoas", {
@@ -52,13 +51,13 @@ const CreateCliente = () => {
         />
         <Input
           label="Tipo Fiscal"
-          value={person.cpfCnpj}
-          onChange={(e) => setPerson({ ...person, cpfCnpj: e.target.value })}
+          value={person.taxType}
+          onChange={(e) => setPerson({ ...person, taxType: e.target.value })}
         />
         <Input
           label="CPF/CNPJ"
-          value={person.taxType}
-          onChange={(e) => setPerson({ ...person, taxType: e.target.value })}
+          value={person.cpfCnpj}
+          onChange={(e) => setPerson({ ...person, cpfCnpj: e.target.value })}
         />
         <Button onClick={() => {}} type="submit">
           Salvar

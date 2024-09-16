@@ -2,7 +2,13 @@ import React from "react";
 
 interface TableProps {
   headers: string[];
-  rows: { id: number; name: string; taxType: string; cpfCnpj: string }[];
+  rows: {
+    id: number;
+    name: string;
+    taxType: string;
+    cpfCnpj: string;
+    acoes: React.JSX.Element;
+  }[];
 }
 
 const Table = ({ headers, rows }: TableProps) => {
@@ -25,6 +31,7 @@ const Table = ({ headers, rows }: TableProps) => {
               <td className="border px-4 py-2">{row.name}</td>
               <td className="border px-4 py-2">{row.taxType}</td>
               <td className="border px-4 py-2">{row.cpfCnpj}</td>
+              <td className="border px-4 py-2">{row.acoes}</td>
             </tr>
           ))}
         </tbody>

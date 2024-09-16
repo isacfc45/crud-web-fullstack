@@ -5,58 +5,57 @@ import { getDatabaseConnection } from "@/main/config";
 export class PhoneRepositoryImpl implements PhoneRepository {
   async create(phone: Phone): Promise<number> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query(
-        "INSERT INTO PHONE (AREA, NUMBER, DEVICE, DESCRIPTION, PERSON_ID) VALUES (?, ?, ?, ?, ?) RETURNING ID",
+    try {
+      const result = await db.run(
+        "INSERT INTO PHONE (AREA, NUMBER, DEVICE, DESCRIPTION, PERSON_ID) VALUES (?, ?, ?, ?, ?)",
         [
           phone.area,
           phone.number,
           phone.device,
           phone.description,
           phone.personId,
-        ],
-        (err, result) => {
-          db.detach();
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result[0].ID);
-          }
-        }
+        ]
       );
-    });
+
+      return result.lastID;
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
-  async findById(id: number): Promise<Phone | undefined> {
+  async index(): Promise<Phone[]> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM PHONE WHERE ID = ?", [id], (err, result) => {
-        db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          if (result.length === 0) {
-            resolve(undefined);
-          } else {
-            const phone = new Phone(
-              result[0].ID,
-              result[0].AREA,
-              result[0].NUMBER,
-              result[0].DEVICE,
-              result[0].DESCRIPTION,
-              result[0].PERSON_ID
-            );
-            resolve(phone);
-          }
-        }
-      });
-    });
+
+    try {
+      const result = await db.all("SELECT * FROM PHONE");
+
+      const phones = result.map(
+        (row) =>
+          new Phone(
+            row.id,
+            row.area,
+            row.number,
+            row.device,
+            row.description,
+            row.person_id
+          )
+      );
+
+      return phones;
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
   async update(phone: Phone): Promise<void> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query(
+
+    try {
+      await db.run(
         "UPDATE PHONE SET AREA = ?, NUMBER = ?, DEVICE = ?, DESCRIPTION = ?, PERSON_ID = ? WHERE ID = ?",
         [
           phone.area,
@@ -65,30 +64,24 @@ export class PhoneRepositoryImpl implements PhoneRepository {
           phone.description,
           phone.personId,
           phone.id,
-        ],
-        (err) => {
-          db.detach();
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        }
+        ]
       );
-    });
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 
   async delete(id: number): Promise<void> {
     const db = await getDatabaseConnection();
-    return new Promise((resolve, reject) => {
-      db.query("DELETE FROM PHONE WHERE ID = ?", [id], (err) => {
-        db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+
+    try {
+      await db.run("DELETE FROM PHONE WHERE ID = ?", [id]);
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
   }
 }
