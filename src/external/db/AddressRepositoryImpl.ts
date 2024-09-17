@@ -8,9 +8,9 @@ export class AddressRepositoryImpl implements AddressRepository {
 
     try {
       const result = await db.run(
-        "INSERT INTO ADDRESS (PUBLIC_PLACE, NUMBER, COMPLEMENT, NEIGHBORHOOD, CEP, CITY, STATE, COUNTRY, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO ADDRESS (ROAD, NUMBER, COMPLEMENT, NEIGHBORHOOD, CEP, CITY, STATE, COUNTRY, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
-          address.publicPlace,
+          address.road,
           address.number,
           address.complement,
           address.neighborhood,
@@ -40,7 +40,7 @@ export class AddressRepositoryImpl implements AddressRepository {
         (row) =>
           new Address(
             row.id,
-            row.public_place,
+            row.road,
             row.number,
             row.complement,
             row.neighborhood,
@@ -65,9 +65,9 @@ export class AddressRepositoryImpl implements AddressRepository {
 
     try {
       await db.run(
-        "UPDATE ADDRESS SET PUBLIC_PLACE = ?, NUMBER = ?, COMPLEMENT = ?, NEIGHBORHOOD = ?, CEP = ?, CITY = ?, STATE = ?, COUNTRY = ?, PERSON_ID = ? WHERE ID = ?",
+        "UPDATE ADDRESS SET ROAD = ?, NUMBER = ?, COMPLEMENT = ?, NEIGHBORHOOD = ?, CEP = ?, CITY = ?, STATE = ?, COUNTRY = ?, PERSON_ID = ? WHERE ID = ?",
         [
-          address.publicPlace,
+          address.road,
           address.number,
           address.complement,
           address.neighborhood,

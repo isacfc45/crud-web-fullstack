@@ -7,7 +7,6 @@ export class CreatePhoneUseCase {
   async execute(data: {
     area: string;
     number: string;
-    device: string;
     description: string;
     personId: number;
   }): Promise<number> {
@@ -15,7 +14,6 @@ export class CreatePhoneUseCase {
       0,
       data.area,
       data.number,
-      data.device,
       data.description,
       data.personId
     );

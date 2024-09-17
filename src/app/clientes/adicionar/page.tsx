@@ -38,26 +38,30 @@ const CreateCliente = () => {
   return (
     <Layout>
       <h2 className="text-2xl font-bold mb-4">Adicionar Cliente</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
         <Input
           label="Nome"
           value={person.name}
           onChange={(e) => setPerson({ ...person, name: e.target.value })}
+          placeholder="Ex: João da Silva"
         />
         <Input
           label="Apelido"
           value={person.nickname}
           onChange={(e) => setPerson({ ...person, nickname: e.target.value })}
+          placeholder="Ex: João"
         />
         <Input
           label="Tipo Fiscal"
           value={person.taxType}
           onChange={(e) => setPerson({ ...person, taxType: e.target.value })}
+          placeholder="Ex: Pessoa Física"
         />
         <Input
           label="CPF/CNPJ"
           value={person.cpfCnpj}
           onChange={(e) => setPerson({ ...person, cpfCnpj: e.target.value })}
+          placeholder="Ex: 123.456.789-00"
         />
         <Button onClick={() => {}} type="submit">
           Salvar

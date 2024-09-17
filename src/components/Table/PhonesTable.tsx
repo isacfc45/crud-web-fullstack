@@ -4,14 +4,14 @@ interface TableProps {
   headers: string[];
   rows: {
     id: number;
-    name: string;
-    taxType: string;
-    cpfCnpj: string;
+    number: string;
+    area: string;
+    description: string;
     acoes: React.JSX.Element;
   }[];
 }
 
-const Table = ({ headers, rows }: TableProps) => {
+const PhonesTable = ({ headers, rows }: TableProps) => {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white">
@@ -27,10 +27,9 @@ const Table = ({ headers, rows }: TableProps) => {
         <tbody>
           {rows.map((row) => (
             <tr key={row.id}>
-              <td className="border px-4 py-2">{row.id}</td>
-              <td className="border px-4 py-2">{row.name}</td>
-              <td className="border px-4 py-2">{row.taxType}</td>
-              <td className="border px-4 py-2">{row.cpfCnpj}</td>
+              <td className="border px-4 py-2">{row.area}</td>
+              <td className="border px-4 py-2">{row.number}</td>
+              <td className="border px-4 py-2">{row.description}</td>
               <td className="border px-4 py-2">{row.acoes}</td>
             </tr>
           ))}
@@ -40,4 +39,4 @@ const Table = ({ headers, rows }: TableProps) => {
   );
 };
 
-export default Table;
+export default PhonesTable;

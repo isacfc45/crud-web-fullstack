@@ -7,14 +7,8 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     const db = await getDatabaseConnection();
     try {
       const result = await db.run(
-        "INSERT INTO PHONE (AREA, NUMBER, DEVICE, DESCRIPTION, PERSON_ID) VALUES (?, ?, ?, ?, ?)",
-        [
-          phone.area,
-          phone.number,
-          phone.device,
-          phone.description,
-          phone.personId,
-        ]
+        "INSERT INTO PHONE (AREA, NUMBER, DESCRIPTION, PERSON_ID) VALUES (?, ?, ?, ?)",
+        [phone.area, phone.number, phone.description, phone.personId]
       );
 
       return result.lastID;
@@ -37,7 +31,6 @@ export class PhoneRepositoryImpl implements PhoneRepository {
             row.id,
             row.area,
             row.number,
-            row.device,
             row.description,
             row.person_id
           )
@@ -56,15 +49,8 @@ export class PhoneRepositoryImpl implements PhoneRepository {
 
     try {
       await db.run(
-        "UPDATE PHONE SET AREA = ?, NUMBER = ?, DEVICE = ?, DESCRIPTION = ?, PERSON_ID = ? WHERE ID = ?",
-        [
-          phone.area,
-          phone.number,
-          phone.device,
-          phone.description,
-          phone.personId,
-          phone.id,
-        ]
+        "UPDATE PHONE SET AREA = ?, NUMBER = ?, DESCRIPTION = ?, PERSON_ID = ? WHERE ID = ?",
+        [phone.area, phone.number, phone.description, phone.personId, phone.id]
       );
     } catch (err) {
       throw err;

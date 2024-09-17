@@ -8,7 +8,6 @@ export class UpdatePhoneUseCase {
     id: number;
     area: string;
     number: string;
-    device: string;
     description: string;
     personId: number;
   }): Promise<void> {
@@ -16,7 +15,6 @@ export class UpdatePhoneUseCase {
       data.id,
       data.area,
       data.number,
-      data.device,
       data.description,
       data.personId
     );

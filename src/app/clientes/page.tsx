@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import Table from "../../components/Table/Table";
+import Table from "../../components/Table/ClientsTable";
 import Button from "../../components/Button/Button";
 import Link from "next/link";
 import { Person } from "@/domain/entities/Person";
+import ClientsTable from "../../components/Table/ClientsTable";
 
 const Clientes = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -36,7 +37,7 @@ const Clientes = () => {
         <Link href={`/clientes/${person.id}`}>
           <div>Visualizar</div>
         </Link>
-        <Link href={`/clientes/edit/${person.id}`}>
+        <Link href={`/clientes/${person.id}/editar`}>
           <div>Editar</div>
         </Link>
         <Link href={`/clientes/delete/${person.id}`}>
@@ -50,11 +51,11 @@ const Clientes = () => {
     <Layout>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Clientes</h2>
-        <Link href="/clientes/create">
+        <Link href="/clientes/adicionar">
           <Button onClick={() => {}}>Adicionar Cliente</Button>
         </Link>
       </div>
-      <Table headers={headers} rows={rows} />
+      <ClientsTable headers={headers} rows={rows} />
     </Layout>
   );
 };

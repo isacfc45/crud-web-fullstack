@@ -6,7 +6,7 @@ export class UpdateAddressUseCase {
 
   async execute(data: {
     id: number;
-    publicPlace: string;
+    road: string;
     number: string;
     complement: string;
     neighborhood: string;
@@ -18,7 +18,7 @@ export class UpdateAddressUseCase {
   }): Promise<void> {
     const address = new Address(
       data.id,
-      data.publicPlace,
+      data.road,
       data.number,
       data.complement,
       data.neighborhood,
