@@ -5,7 +5,7 @@ export class CreateAddressUseCase {
   constructor(private addressRepository: AddressRepository) {}
 
   async execute(data: {
-    publicPlace: string;
+    road: string;
     number: string;
     complement: string;
     neighborhood: string;
@@ -17,7 +17,7 @@ export class CreateAddressUseCase {
   }): Promise<number> {
     const address = new Address(
       0,
-      data.publicPlace,
+      data.road,
       data.number,
       data.complement,
       data.neighborhood,

@@ -1,7 +1,7 @@
 export class Address {
   constructor(
     public id: number,
-    public publicPlace: string,
+    public road: string,
     public number: string,
     public complement: string,
     public neighborhood: string,
