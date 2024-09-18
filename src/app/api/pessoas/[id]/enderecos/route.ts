@@ -6,6 +6,10 @@ export const POST = async (req: NextApiRequest) => {
   return Response.json(await addressController.create(data));
 };
 
-export const GET = async () => {
-  return Response.json(await addressController.index());
+export const GET = async (
+  req: NextApiRequest,
+  context: { params: { id: string } }
+) => {
+  const id = Number(context.params.id || 0);
+  return Response.json(await addressController.index(id));
 };

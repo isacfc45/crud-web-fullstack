@@ -4,8 +4,8 @@ import { AddressRepository } from "@/domain/repositories/AddressRepository";
 export class IndexAddressUseCase {
   constructor(private addressRepository: AddressRepository) {}
 
-  async execute(): Promise<Address[]> {
-    const addresses = await this.addressRepository.index();
+  async execute(id: number): Promise<Address[]> {
+    const addresses = await this.addressRepository.index(id);
     return addresses;
   }
 }

@@ -17,8 +17,8 @@ export class AddressController {
     return id;
   }
 
-  async index() {
-    const addresses = await this.indexAddressUseCase.execute();
+  async index(id: number) {
+    const addresses = await this.indexAddressUseCase.execute(id);
     return addresses;
   }
 
