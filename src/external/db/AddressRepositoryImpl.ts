@@ -30,11 +30,13 @@ export class AddressRepositoryImpl implements AddressRepository {
     }
   }
 
-  async index(): Promise<Address[]> {
+  async index(id: number): Promise<Address[]> {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.all("SELECT * FROM ADDRESS");
+      const result = await db.all("SELECT * FROM ADDRESS WHERE PERSON_ID = ?", [
+        id,
+      ]);
 
       const addresses = result.map(
         (row) =>

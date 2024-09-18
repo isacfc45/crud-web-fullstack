@@ -4,8 +4,8 @@ import { PhoneRepository } from "@/domain/repositories/PhoneRepository";
 export class IndexPhoneUseCase {
   constructor(private phoneRepository: PhoneRepository) {}
 
-  async execute(): Promise<Phone[]> {
-    const phones = await this.phoneRepository.index();
+  async execute(id: number): Promise<Phone[]> {
+    const phones = await this.phoneRepository.index(id);
     return phones;
   }
 }

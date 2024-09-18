@@ -17,8 +17,8 @@ export class PhoneController {
     return id;
   }
 
-  async index() {
-    const phones = await this.indexPhoneUseCase.execute();
+  async index(id: number) {
+    const phones = await this.indexPhoneUseCase.execute(id);
     return phones;
   }
 

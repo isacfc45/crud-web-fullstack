@@ -19,11 +19,13 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     }
   }
 
-  async index(): Promise<Phone[]> {
+  async index(id: number): Promise<Phone[]> {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.all("SELECT * FROM PHONE");
+      const result = await db.all("SELECT * FROM PHONE WHERE PERSON_ID = ?", [
+        id,
+      ]);
 
       const phones = result.map(
         (row) =>
