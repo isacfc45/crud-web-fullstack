@@ -4,14 +4,36 @@ import Button from "@/components/Button/Button";
 import Input from "@/components/Input/Input";
 import Layout from "@/components/Layout/Layout";
 import { Phone } from "@/domain/entities/Phone";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 
-const CreateTelefone = ({ params }: { params: { id: number } }) => {
-  const { id } = params;
+const EditTelefone = ({
+  params,
+}: {
+  params: { id: number; telefone_id: number };
+}) => {
+  const { id, telefone_id } = params;
   const [phone, setPhone] = useState<Phone>(new Phone(0, "", "", "", id));
   const router = useRouter();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const response = await fetch(`/api/pessoas/${id}/telefones/${telefone_id}`);
+    const data = await response.json();
+
+    if (!data) {
+      router.push("/404");
+      return;
+    }
+
+    setPhone(data);
+    console.log(data);
+  };
 
   const phoneSchema = z.object({
     area: z.string().min(1, "O DDD é obrigatório."),
@@ -39,29 +61,32 @@ const CreateTelefone = ({ params }: { params: { id: number } }) => {
     }
 
     try {
-      const response = await fetch(`/api/pessoas/${id}/telefones`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(phone),
-      });
+      const response = await fetch(
+        `/api/pessoas/${id}/telefones/${telefone_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(phone),
+        }
+      );
 
       if (response.ok) {
-        alert("Telefone criado com sucesso!");
+        alert("Telefone editado com sucesso!");
         router.push(`/clientes/${id}`);
       } else {
-        alert("Erro ao criar telefone.");
+        alert("Erro ao editar telefone.");
       }
     } catch (error) {
-      console.error("Erro ao criar telefone:", error);
-      alert("Erro ao criar telefone.");
+      console.error("Erro ao editar telefone:", error);
+      alert("Erro ao editar telefone.");
     }
   };
 
   return (
     <Layout>
-      <h2 className="text-2xl font-bold mb-4">Adicionar Telefone</h2>
+      <h2 className="text-2xl font-bold mb-4">Editar Endereço</h2>
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
         <Input
           label="Área"
@@ -97,13 +122,22 @@ const CreateTelefone = ({ params }: { params: { id: number } }) => {
           </span>
         )}
         <div className="mt-4">
-          <Button onClick={() => {}} type="submit">
-            Adicionar Telefone
+          <Button onClick={() => {}} type="submit" className="mr-2">
+            Salvar
           </Button>
+          <Link href={`/clientes/${id}`}>
+            <Button
+              onClick={() => {}}
+              type="button"
+              className="bg-gray-500 hover:bg-gray-700"
+            >
+              Cancelar
+            </Button>
+          </Link>
         </div>
       </form>
     </Layout>
   );
 };
 
-export default CreateTelefone;
+export default EditTelefone;

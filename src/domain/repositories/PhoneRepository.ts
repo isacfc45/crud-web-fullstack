@@ -5,4 +5,5 @@ export interface PhoneRepository {
   index(id: number): Promise<Phone[]>;
   update(phone: Phone): Promise<void>;
   delete(id: number): Promise<void>;
+  findById(id: number): Promise<Phone>;
 }

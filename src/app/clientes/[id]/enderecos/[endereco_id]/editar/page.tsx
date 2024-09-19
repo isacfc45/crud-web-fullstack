@@ -4,16 +4,38 @@ import Button from "@/components/Button/Button";
 import Input from "@/components/Input/Input";
 import Layout from "@/components/Layout/Layout";
 import { Address } from "@/domain/entities/Address";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 
-const AddEndereco = ({ params }: { params: { id: number } }) => {
-  const { id } = params;
+const EditEndereco = ({
+  params,
+}: {
+  params: { id: number; endereco_id: number };
+}) => {
+  const { id, endereco_id } = params;
   const [address, setAddress] = useState<Address>(
     new Address(0, "", "", "", "", "", "", "", "", id)
   );
   const router = useRouter();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const response = await fetch(`/api/pessoas/${id}/enderecos/${endereco_id}`);
+    const data = await response.json();
+
+    if (!data) {
+      router.push("/404");
+      return;
+    }
+
+    setAddress(data);
+    console.log(data);
+  };
 
   const addressSchema = z.object({
     road: z.string().min(1, "O logradouro é obrigatório."),
@@ -51,29 +73,32 @@ const AddEndereco = ({ params }: { params: { id: number } }) => {
     }
 
     try {
-      const response = await fetch(`/api/pessoas/${id}/enderecos`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(address),
-      });
+      const response = await fetch(
+        `/api/pessoas/${id}/enderecos/${endereco_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(address),
+        }
+      );
 
       if (response.ok) {
-        alert("Endereço criado com sucesso!");
+        alert("Endereço editado com sucesso!");
         router.push(`/clientes/${id}`);
       } else {
-        alert("Erro ao criar endereço.");
+        alert("Erro ao editar endereço.");
       }
     } catch (error) {
-      console.error("Erro ao criar endereço:", error);
-      alert("Erro ao criar endereço.");
+      console.error("Erro ao editar endereço:", error);
+      alert("Erro ao editar endereço.");
     }
   };
 
   return (
     <Layout>
-      <h2 className="text-2xl font-bold mb-4">Adicionar Endereço</h2>
+      <h2 className="text-2xl font-bold mb-4">Editar Endereço</h2>
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
         <Input
           label="Logradouro"
@@ -168,13 +193,22 @@ const AddEndereco = ({ params }: { params: { id: number } }) => {
           </span>
         )}
         <div className="mt-4">
-          <Button onClick={() => {}} type="submit">
-            Adicionar Endereço
+          <Button onClick={() => {}} type="submit" className="mr-2">
+            Salvar
           </Button>
+          <Link href={`/clientes/${id}`}>
+            <Button
+              onClick={() => {}}
+              type="button"
+              className="bg-gray-500 hover:bg-gray-700"
+            >
+              Cancelar
+            </Button>
+          </Link>
         </div>
       </form>
     </Layout>
   );
 };
 
-export default AddEndereco;
+export default EditEndereco;

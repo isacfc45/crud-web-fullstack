@@ -72,4 +72,28 @@ export class PhoneRepositoryImpl implements PhoneRepository {
       db.close();
     }
   }
+
+  async findById(id: number): Promise<Phone> {
+    const db = await getDatabaseConnection();
+
+    try {
+      const result = await db.get("SELECT * FROM PHONE WHERE ID = ?", [id]);
+
+      if (!result) {
+        throw new Error(`Telefone com id ${id} não encontrada`);
+      }
+
+      return new Phone(
+        result.id,
+        result.area,
+        result.number,
+        result.description,
+        result.person_id
+      );
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
+  }
 }

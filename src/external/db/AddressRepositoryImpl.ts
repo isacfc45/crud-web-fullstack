@@ -99,4 +99,33 @@ export class AddressRepositoryImpl implements AddressRepository {
       db.close();
     }
   }
+
+  async findById(id: number): Promise<Address> {
+    const db = await getDatabaseConnection();
+
+    try {
+      const result = await db.get("SELECT * FROM ADDRESS WHERE ID = ?", [id]);
+
+      if (!result) {
+        throw new Error("Address not found");
+      }
+
+      return new Address(
+        result.id,
+        result.road,
+        result.number,
+        result.complement,
+        result.neighborhood,
+        result.cep,
+        result.city,
+        result.state,
+        result.country,
+        result.person_id
+      );
+    } catch (err) {
+      throw err;
+    } finally {
+      db.close();
+    }
+  }
 }
