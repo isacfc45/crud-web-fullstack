@@ -18,7 +18,10 @@ const PhonesTable = ({ headers, rows }: TableProps) => {
         <thead>
           <tr>
             {headers.map((header, index) => (
-              <th key={index} className="py-2 px-4 border-b">
+              <th
+                key={index}
+                className="py-2 px-4 border-b bg-black text-white"
+              >
                 {header}
               </th>
             ))}

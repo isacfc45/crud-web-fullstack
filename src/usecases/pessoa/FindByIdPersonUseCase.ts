@@ -1,5 +1,5 @@
 import { Person } from "@/domain/entities/Person";
-import { PersonRepository } from "@/domain/repositories/PessoaRepository";
+import { PersonRepository } from "@/domain/repositories/PersonRepository";
 
 export class FindByIdPersonUseCase {
   constructor(private personRepository: PersonRepository) {}
@@ -7,7 +7,7 @@ export class FindByIdPersonUseCase {
   async execute(id: number): Promise<Person> {
     const person = await this.personRepository.findById(id);
     if (!person) {
-      throw new Error(`Person with ID ${id} not found`);
+      throw new Error(`Pessoa com id ${id} não encontrada`);
     }
     return person;
   }

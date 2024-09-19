@@ -6,4 +6,5 @@ export interface PersonRepository {
   findById(id: number): Promise<Person | undefined>;
   update(person: Person): Promise<void>;
   delete(id: number): Promise<void>;
+  checkCpfCnpj(cpfCnpj: string): Promise<boolean>;
 }

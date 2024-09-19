@@ -1,4 +1,4 @@
-import { PersonRepository } from "@/domain/repositories/PessoaRepository";
+import { PersonRepository } from "@/domain/repositories/PersonRepository";
 
 export class DeletePersonUseCase {
   constructor(private personRepository: PersonRepository) {}
