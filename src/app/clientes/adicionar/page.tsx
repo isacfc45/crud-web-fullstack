@@ -11,6 +11,7 @@ import InputSelect from "@/components/Input/InputSelect";
 
 const CreateCliente = () => {
   const [person, setPerson] = useState<Person>(new Person(0, "", "", "", ""));
+  const [confirmDuplicate, setConfirmDuplicate] = useState(false);
   const router = useRouter();
 
   const personSchema = z.object({
@@ -46,16 +47,21 @@ const CreateCliente = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cpfCnpj: person.cpfCnpj }),
+        body: JSON.stringify(person.cpfCnpj),
       });
-
-      console.log(checkCpfCnpj);
 
       const checkCpfCnpjData = await checkCpfCnpj.json();
 
       if (checkCpfCnpjData.exists) {
-        alert("CPF/CNPJ já cadastrado.");
-        return;
+        const confirmDuplicate = window.confirm(
+          "CPF/CNPJ já cadastrado. Deseja continuar?"
+        );
+
+        if (!confirmDuplicate) {
+          return;
+        }
+
+        setConfirmDuplicate(true);
       }
 
       const response = await fetch("/api/pessoas", {

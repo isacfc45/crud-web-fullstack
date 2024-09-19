@@ -42,7 +42,6 @@ export class PersonController {
   }
 
   async checkCpfCnpj(cpfCnpj: string) {
-    console.log(cpfCnpj);
     const exists = await this.checkCpfCnpjPersonUseCase.execute(cpfCnpj);
     return { exists };
   }
