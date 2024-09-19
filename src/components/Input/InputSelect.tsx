@@ -1,22 +1,21 @@
 import React from "react";
 
-interface InputProps {
+interface InputSelectProps {
   label?: string;
-  value?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: "text" | "password" | "email" | "select";
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder?: string;
   className?: string;
+  options: { value: string; label: string }[];
 }
 
-const Input = ({
+const InputSelect = ({
   label,
   value,
   onChange,
-  type = "text",
-  placeholder,
   className,
-}: InputProps) => {
+  options,
+}: InputSelectProps) => {
   return (
     <div className={`mb-4 ${className}`}>
       {label && (
@@ -24,15 +23,19 @@ const Input = ({
           {label}
         </label>
       )}
-      <input
-        type={type}
+      <select
         value={value}
         onChange={onChange}
-        placeholder={placeholder}
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      />
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
 
-export default Input;
+export default InputSelect;

@@ -2,6 +2,7 @@
 
 import Button from "@/components/Button/Button";
 import Input from "@/components/Input/Input";
+import InputSelect from "@/components/Input/InputSelect";
 import Layout from "@/components/Layout/Layout";
 import { Person } from "@/domain/entities/Person";
 import Link from "next/link";
@@ -63,10 +64,14 @@ const EditCliente = ({ params }: { params: { id: number } }) => {
           value={person.nickname}
           onChange={(e) => setPerson({ ...person, nickname: e.target.value })}
         />
-        <Input
+        <InputSelect
           label="Tipo Fiscal"
           value={person.taxType}
           onChange={(e) => setPerson({ ...person, taxType: e.target.value })}
+          options={[
+            { label: "Física", value: "F" },
+            { label: "Jurídica", value: "J" },
+          ]}
         />
         <Input
           label="CPF/CNPJ"

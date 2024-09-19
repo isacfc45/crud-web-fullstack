@@ -11,6 +11,8 @@ import { Phone } from "@/domain/entities/Phone";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { GrUpdate } from "react-icons/gr";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const Cliente = ({ params }: { params: { id: number } }) => {
   const [person, setPerson] = useState<Person>(new Person(0, "", "", "", ""));
@@ -74,14 +76,15 @@ const Cliente = ({ params }: { params: { id: number } }) => {
     country: address.country,
     acoes: (
       <div className="flex justify-around">
-        <Link href={`/clientes/${person.id}`}>
-          <div>Visualizar</div>
-        </Link>
         <Link href={`/clientes/${person.id}/editar`}>
-          <div>Editar</div>
+          <div>
+            <GrUpdate />
+          </div>
         </Link>
         <Link href={`/clientes/delete/${person.id}`}>
-          <div>Excluir</div>
+          <div>
+            <RiDeleteBin6Line />
+          </div>
         </Link>
       </div>
     ),
@@ -93,14 +96,15 @@ const Cliente = ({ params }: { params: { id: number } }) => {
     description: phone.description,
     acoes: (
       <div className="flex justify-around">
-        <Link href={`/clientes/${person.id}`}>
-          <div>Visualizar</div>
-        </Link>
         <Link href={`/clientes/${person.id}/editar`}>
-          <div>Editar</div>
+          <div>
+            <GrUpdate />
+          </div>
         </Link>
         <Link href={`/clientes/delete/${person.id}`}>
-          <div>Excluir</div>
+          <div>
+            <RiDeleteBin6Line />
+          </div>
         </Link>
       </div>
     ),

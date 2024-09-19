@@ -1,4 +1,5 @@
 import { Person } from "@/domain/entities/Person";
+import { CheckCpfCnpjPersonUseCase } from "@/usecases/pessoa/CheckCpfCnpjPersonUseCase";
 import { CreatePersonUseCase } from "@/usecases/pessoa/CreatePersonUseCase";
 import { DeletePersonUseCase } from "@/usecases/pessoa/DeletePersonUseCase";
 import { FindByIdPersonUseCase } from "@/usecases/pessoa/FindByIdPersonUseCase";
@@ -11,7 +12,8 @@ export class PersonController {
     private indexPersonUseCase: IndexPersonUseCase,
     private findByIdPersonUseCase: FindByIdPersonUseCase,
     private updatePersonUseCase: UpdatePersonUseCase,
-    private deletePersonUseCase: DeletePersonUseCase
+    private deletePersonUseCase: DeletePersonUseCase,
+    private checkCpfCnpjPersonUseCase: CheckCpfCnpjPersonUseCase
   ) {}
 
   async create(person: Person) {
@@ -37,5 +39,11 @@ export class PersonController {
   async delete(id: number) {
     const personId = await this.deletePersonUseCase.execute(id);
     return { id: personId };
+  }
+
+  async checkCpfCnpj(cpfCnpj: string) {
+    console.log(cpfCnpj);
+    const exists = await this.checkCpfCnpjPersonUseCase.execute(cpfCnpj);
+    return { exists };
   }
 }

@@ -1,5 +1,5 @@
 import { Person } from "@/domain/entities/Person";
-import { PersonRepository } from "@/domain/repositories/PessoaRepository";
+import { PersonRepository } from "@/domain/repositories/PersonRepository";
 import { getDatabaseConnection } from "@/main/config";
 
 export class PersonRepositoryImpl implements PersonRepository {
@@ -7,13 +7,30 @@ export class PersonRepositoryImpl implements PersonRepository {
     const db = await getDatabaseConnection();
 
     try {
+      db.exec("BEGIN TRANSACTION");
+
       const result = await db.run(
         "INSERT INTO PERSON (NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?)",
         [person.name, person.nickname, person.taxType, person.cpfCnpj]
       );
 
+      await db.run(
+        "INSERT INTO PERSON_COPY (ID, NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?, ?)",
+        [
+          result.lastID,
+          person.name,
+          person.nickname,
+          person.taxType,
+          person.cpfCnpj,
+        ]
+      );
+
+      db.exec("COMMIT");
+
       return result.lastID;
     } catch (err) {
+      db.exec("ROLLBACK");
+
       console.error(err);
       throw err;
     } finally {
@@ -94,6 +111,23 @@ export class PersonRepositoryImpl implements PersonRepository {
 
     try {
       await db.run("DELETE FROM PERSON WHERE ID = ?", [id]);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      db.close();
+    }
+  }
+
+  async checkCpfCnpj(cpfCnpj: string): Promise<boolean> {
+    const db = await getDatabaseConnection();
+
+    try {
+      const result = await db.get("SELECT * FROM PERSON WHERE CPF_CNPJ = ?", [
+        cpfCnpj,
+      ]);
+
+      return !!result;
     } catch (err) {
       console.error(err);
       throw err;

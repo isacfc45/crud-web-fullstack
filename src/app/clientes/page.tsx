@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import Table from "../../components/Table/ClientsTable";
 import Button from "../../components/Button/Button";
 import Link from "next/link";
 import { Person } from "@/domain/entities/Person";
 import ClientsTable from "../../components/Table/ClientsTable";
+import { GrUpdate, GrView } from "react-icons/gr";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const Clientes = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -35,13 +36,19 @@ const Clientes = () => {
     acoes: (
       <div className="flex justify-around">
         <Link href={`/clientes/${person.id}`}>
-          <div>Visualizar</div>
+          <div>
+            <GrView />
+          </div>
         </Link>
         <Link href={`/clientes/${person.id}/editar`}>
-          <div>Editar</div>
+          <div>
+            <GrUpdate />
+          </div>
         </Link>
         <Link href={`/clientes/delete/${person.id}`}>
-          <div>Excluir</div>
+          <div>
+            <RiDeleteBin6Line />
+          </div>
         </Link>
       </div>
     ),

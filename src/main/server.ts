@@ -8,6 +8,7 @@ import { CreateAddressUseCase } from "@/usecases/address/CreateAddressUseCase";
 import { DeleteAddressUseCase } from "@/usecases/address/DeleteAddressUseCase";
 import { IndexAddressUseCase } from "@/usecases/address/IndexAddressUseCase";
 import { UpdateAddressUseCase } from "@/usecases/address/UpdateAddressUseCase";
+import { CheckCpfCnpjPersonUseCase } from "@/usecases/pessoa/CheckCpfCnpjPersonUseCase";
 import { CreatePersonUseCase } from "@/usecases/pessoa/CreatePersonUseCase";
 import { DeletePersonUseCase } from "@/usecases/pessoa/DeletePersonUseCase";
 import { FindByIdPersonUseCase } from "@/usecases/pessoa/FindByIdPersonUseCase";
@@ -24,12 +25,14 @@ const indexPersonUseCase = new IndexPersonUseCase(personRepository);
 const findByIdPersonUseCase = new FindByIdPersonUseCase(personRepository);
 const updatePersonUseCase = new UpdatePersonUseCase(personRepository);
 const deletePersonUseCase = new DeletePersonUseCase(personRepository);
+const checkCpfCnpj = new CheckCpfCnpjPersonUseCase(personRepository);
 const personController = new PersonController(
   createPersonUseCase,
   indexPersonUseCase,
   findByIdPersonUseCase,
   updatePersonUseCase,
-  deletePersonUseCase
+  deletePersonUseCase,
+  checkCpfCnpj
 );
 
 const addressRepository = new AddressRepositoryImpl();
