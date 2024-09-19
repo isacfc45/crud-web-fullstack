@@ -1,6 +1,7 @@
 import { Address } from "@/domain/entities/Address";
 import { CreateAddressUseCase } from "@/usecases/address/CreateAddressUseCase";
 import { DeleteAddressUseCase } from "@/usecases/address/DeleteAddressUseCase";
+import { FindByIdAddressUseCase } from "@/usecases/address/FindByIdAddressUseCase";
 import { IndexAddressUseCase } from "@/usecases/address/IndexAddressUseCase";
 import { UpdateAddressUseCase } from "@/usecases/address/UpdateAddressUseCase";
 
@@ -9,7 +10,8 @@ export class AddressController {
     private createAddressUseCase: CreateAddressUseCase,
     private indexAddressUseCase: IndexAddressUseCase,
     private updateAddressUseCase: UpdateAddressUseCase,
-    private deleteAddressUseCase: DeleteAddressUseCase
+    private deleteAddressUseCase: DeleteAddressUseCase,
+    private findByIdAddressUseCase: FindByIdAddressUseCase
   ) {}
 
   async create(address: Address) {
@@ -24,11 +26,16 @@ export class AddressController {
 
   async update(address: Address) {
     const id = await this.updateAddressUseCase.execute(address);
-    return id;
+    return { id };
   }
 
   async delete(id: number) {
     const addressId = await this.deleteAddressUseCase.execute(id);
     return { id: addressId };
+  }
+
+  async findById(id: number) {
+    const address = await this.findByIdAddressUseCase.execute(id);
+    return address;
   }
 }

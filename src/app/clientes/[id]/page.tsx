@@ -109,7 +109,7 @@ const Cliente = ({ params }: { params: { id: number } }) => {
     country: address.country,
     acoes: (
       <div className="flex justify-around">
-        <Link href={`/clientes/${person.id}/editar`}>
+        <Link href={`/clientes/${person.id}/enderecos/${address.id}/editar`}>
           <div>
             <GrUpdate />
           </div>
@@ -161,7 +161,7 @@ const Cliente = ({ params }: { params: { id: number } }) => {
     description: phone.description,
     acoes: (
       <div className="flex justify-around">
-        <Link href={`/clientes/${person.id}/editar`}>
+        <Link href={`/clientes/${person.id}/telefones/${phone.id}/editar`}>
           <div>
             <GrUpdate />
           </div>
