@@ -20,7 +20,11 @@ export const PUT_id = async (req: NextApiRequest) => {
   return Response.json(await personController.update(data));
 };
 
-export const DELETE_id = async (req: NextApiRequest) => {
-  const id = Number(req.query.id);
+export const DELETE = async (
+  req: NextApiRequest,
+  context: { params: { id: string } }
+) => {
+  const id = Number(context.params.id || 0);
+
   return Response.json(await personController.delete(id));
 };

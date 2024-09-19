@@ -18,7 +18,10 @@ const CreateCliente = () => {
     name: z.string().min(1, { message: "Nome é obrigatório" }),
     nickname: z.string().min(1, { message: "Apelido é obrigatório" }),
     taxType: z.string().min(1, { message: "Tipo Fiscal é obrigatório" }),
-    cpfCnpj: z.string().min(1, { message: "CPF/CNPJ é obrigatório" }),
+    cpfCnpj: z
+      .string()
+      .nonempty({ message: "CPF/CNPJ é obrigatório" })
+      .regex(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, "CPF/CNPJ inválido"),
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string[] | undefined }>(

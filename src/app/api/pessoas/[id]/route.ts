@@ -15,3 +15,12 @@ export const PUT = async (req: NextApiRequest) => {
 
   return Response.json(await personController.update(data));
 };
+
+export const DELETE = async (
+  req: NextApiRequest,
+  context: { params: { id: string } }
+) => {
+  const id = Number(context.params.id || 0);
+
+  return Response.json(await personController.delete(id));
+};

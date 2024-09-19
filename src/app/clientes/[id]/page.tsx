@@ -65,6 +65,39 @@ const Cliente = ({ params }: { params: { id: number } }) => {
     setAddresses(data);
   };
 
+  const handleDeleteAddress = async (
+    e: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    e.preventDefault();
+
+    const confirmDelete = window.confirm(
+      "Deseja realmente excluir este endereço?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    const hrefParts = e.currentTarget.href.split("/");
+    const userId = hrefParts[hrefParts.length - 3];
+    const enderecoId = hrefParts[hrefParts.length - 1];
+    const response = await fetch(
+      `/api/pessoas/${userId}/enderecos/${enderecoId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    console.log(id);
+    const data = await response.json();
+    if (data) {
+      setAddresses(
+        addresses.filter((address) => address.id !== parseInt(enderecoId))
+      );
+    }
+
+    alert("Endereço excluído com sucesso!");
+  };
+
   const rowsAddresses = addresses.map((address) => ({
     road: address.road,
     number: address.number,
@@ -81,7 +114,10 @@ const Cliente = ({ params }: { params: { id: number } }) => {
             <GrUpdate />
           </div>
         </Link>
-        <Link href={`/clientes/delete/${person.id}`}>
+        <Link
+          href={`/pessoas/${person.id}/enderecos/${address.id}`}
+          onClick={handleDeleteAddress}
+        >
           <div>
             <RiDeleteBin6Line />
           </div>
@@ -89,6 +125,35 @@ const Cliente = ({ params }: { params: { id: number } }) => {
       </div>
     ),
   }));
+
+  const handleDeletePhone = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    const confirmDelete = window.confirm(
+      "Deseja realmente excluir este telefone?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    const hrefParts = e.currentTarget.href.split("/");
+    const userId = hrefParts[hrefParts.length - 3];
+    const phoneId = hrefParts[hrefParts.length - 1];
+    const response = await fetch(
+      `/api/pessoas/${userId}/enderecos/${phoneId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    console.log(id);
+    const data = await response.json();
+    if (data) {
+      setPhones(phones.filter((phone) => phone.id !== parseInt(phoneId)));
+    }
+
+    alert("Telefone excluído com sucesso!");
+  };
 
   const rowsPhones = phones.map((phone) => ({
     area: phone.area,
@@ -101,7 +166,10 @@ const Cliente = ({ params }: { params: { id: number } }) => {
             <GrUpdate />
           </div>
         </Link>
-        <Link href={`/clientes/delete/${person.id}`}>
+        <Link
+          href={`/pessoas/${person.id}/telefones/${phone.id}`}
+          onClick={handleDeletePhone}
+        >
           <div>
             <RiDeleteBin6Line />
           </div>

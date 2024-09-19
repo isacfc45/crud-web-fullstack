@@ -28,6 +28,30 @@ const Clientes = () => {
     fetchPeople();
   }, []);
 
+  const handleDelete = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    const confirmDelete = window.confirm(
+      "Deseja realmente excluir este cliente?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    const id = e.currentTarget.href.split("/").pop();
+    const response = await fetch(`/api/pessoas/${id}`, {
+      method: "DELETE",
+    });
+    console.log(id);
+    const data = await response.json();
+    if (data) {
+      setPeople(people.filter((person) => person.id !== parseInt(id)));
+    }
+
+    alert("Cliente excluído com sucesso!");
+  };
+
   const rows = people.map((person) => ({
     id: person.id,
     name: person.name,
@@ -45,7 +69,7 @@ const Clientes = () => {
             <GrUpdate />
           </div>
         </Link>
-        <Link href={`/clientes/delete/${person.id}`}>
+        <Link href={`${person.id}`} onClick={handleDelete}>
           <div>
             <RiDeleteBin6Line />
           </div>
