@@ -75,9 +75,9 @@ const EditCliente = ({ params }: { params: { id: number } }) => {
       const checkCpfCnpjData = await checkCpfCnpj.json();
 
       if (checkCpfCnpjData.exists) {
-        const confirmDuplicate = window.confirm(
+        setConfirmDuplicate(window.confirm(
           "CPF/CNPJ já cadastrado. Deseja continuar?"
-        );
+        ));
 
         if (!confirmDuplicate) {
           return;
