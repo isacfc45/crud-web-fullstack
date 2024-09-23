@@ -58,10 +58,10 @@ const CreateCliente = () => {
       const checkCpfCnpjData = await checkCpfCnpj.json();
 
       if (checkCpfCnpjData.exists) {
-        setConfirmDuplicate(
-          window.confirm("CPF/CNPJ já cadastrado. Deseja continuar?")
-        );
-
+      setConfirmDuplicate(window.confirm(
+        "CPF/CNPJ já cadastrado. Deseja continuar?"
+      ));
+        
         if (!confirmDuplicate) {
           return;
         }
