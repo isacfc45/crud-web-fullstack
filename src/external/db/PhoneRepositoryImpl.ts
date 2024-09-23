@@ -11,7 +11,7 @@ export class PhoneRepositoryImpl implements PhoneRepository {
         [phone.area, phone.number, phone.description, phone.personId]
       );
 
-      return result.lastID;
+      return result.lastID!;
     } catch (err) {
       throw err;
     } finally {

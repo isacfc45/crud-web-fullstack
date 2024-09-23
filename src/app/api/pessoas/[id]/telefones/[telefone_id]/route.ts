@@ -1,8 +1,8 @@
 import { phoneController } from "@/main/server";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next/server";
 
 export const DELETE = async (
-  req: NextApiRequest,
+  req: NextRequest,
   context: { params: { id: string } }
 ) => {
   const id = Number(context.params.id || 0);
@@ -11,7 +11,7 @@ export const DELETE = async (
 };
 
 export const GET = async (
-  req: NextApiRequest,
+  req: NextRequest,
   context: { params: { id: number; telefone_id: number } }
 ) => {
   const id = Number(context.params.telefone_id || 0);
@@ -19,7 +19,7 @@ export const GET = async (
   return Response.json(await phoneController.findById(id));
 };
 
-export const PUT = async (req: NextApiRequest) => {
+export const PUT = async (req: NextRequest) => {
   console.log(req.body);
   const data = await new Response(req.body).json();
 

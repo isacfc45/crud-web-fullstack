@@ -3,7 +3,7 @@ import React from "react";
 interface TableProps {
   headers: string[];
   rows: {
-    id: number;
+    id?: number;
     number: string;
     area: string;
     description: string;

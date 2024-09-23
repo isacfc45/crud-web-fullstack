@@ -11,8 +11,10 @@ export const getDatabaseConnection = async () => {
     const db = await open(options);
     console.log("Conexão com o banco de dados SQLite estabelecida!");
     return db;
-  } catch (err: any) {
-    console.error("Erro ao conectar com o banco de dados:", err.message);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Erro ao conectar com o banco de dados:", err.message);
+    }
     throw err;
   }
 };

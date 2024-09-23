@@ -43,10 +43,9 @@ const Clientes = () => {
     const response = await fetch(`/api/pessoas/${id}`, {
       method: "DELETE",
     });
-    console.log(id);
     const data = await response.json();
     if (data) {
-      setPeople(people.filter((person) => person.id !== parseInt(id)));
+      setPeople(people.filter((person) => person.id !== parseInt(id!)));
     }
 
     alert("Cliente excluído com sucesso!");

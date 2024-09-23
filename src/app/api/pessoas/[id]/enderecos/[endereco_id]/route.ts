@@ -1,8 +1,8 @@
 import { addressController } from "@/main/server";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next/server";
 
 export const DELETE = async (
-  req: NextApiRequest,
+  req: NextRequest,
   context: { params: { id: number } }
 ) => {
   const id = Number(context.params.id || 0);
@@ -11,7 +11,7 @@ export const DELETE = async (
 };
 
 export const GET = async (
-  req: NextApiRequest,
+  req: NextRequest,
   context: { params: { id: number; endereco_id: number } }
 ) => {
   const id = Number(context.params.endereco_id || 0);
@@ -19,7 +19,7 @@ export const GET = async (
   return Response.json(await addressController.findById(id));
 };
 
-export const PUT = async (req: NextApiRequest) => {
+export const PUT = async (req: NextRequest) => {
   console.log(req.body);
   const data = await new Response(req.body).json();
 
