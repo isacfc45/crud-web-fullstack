@@ -6,16 +6,17 @@ export class PhoneRepositoryImpl implements PhoneRepository {
   async create(phone: Phone): Promise<number> {
     const db = await getDatabaseConnection();
     try {
-      const result = await db.run(
-        "INSERT INTO PHONE (AREA, NUMBER, DESCRIPTION, PERSON_ID) VALUES (?, ?, ?, ?)",
+      const [result] = await db.execute(
+        "INSERT INTO phone (AREA, NUMBER, DESCRIPTION, PERSON_ID) VALUES (?, ?, ?, ?)",
         [phone.area, phone.number, phone.description, phone.personId]
       );
 
-      return result.lastID!;
+      const insertId = (result as any).insertId;
+      return insertId;
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -23,11 +24,12 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.all("SELECT * FROM PHONE WHERE PERSON_ID = ?", [
-        id,
-      ]);
+      const [rows] = await db.execute(
+        "SELECT * FROM phone WHERE PERSON_ID = ?",
+        [id]
+      );
 
-      const phones = result.map(
+      const phones = (rows as any[]).map(
         (row) =>
           new Phone(
             row.id,
@@ -42,7 +44,7 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -50,14 +52,14 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     const db = await getDatabaseConnection();
 
     try {
-      await db.run(
-        "UPDATE PHONE SET AREA = ?, NUMBER = ?, DESCRIPTION = ?, PERSON_ID = ? WHERE ID = ?",
+      await db.execute(
+        "UPDATE phone SET AREA = ?, NUMBER = ?, DESCRIPTION = ?, PERSON_ID = ? WHERE ID = ?",
         [phone.area, phone.number, phone.description, phone.personId, phone.id]
       );
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -65,11 +67,11 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     const db = await getDatabaseConnection();
 
     try {
-      await db.run("DELETE FROM PHONE WHERE ID = ?", [id]);
+      await db.execute("DELETE FROM phone WHERE ID = ?", [id]);
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -77,12 +79,15 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.get("SELECT * FROM PHONE WHERE ID = ?", [id]);
+      const [rows] = await db.execute("SELECT * FROM phones WHERE ID = ?", [
+        id,
+      ]);
 
-      if (!result) {
-        throw new Error(`Telefone com id ${id} não encontrada`);
+      if ((rows as any[]).length === 0) {
+        throw new Error(`Telefone com id ${id} não encontrado`);
       }
 
+      const result = (rows as any[])[0];
       return new Phone(
         result.id,
         result.area,
@@ -93,7 +98,7 @@ export class PhoneRepositoryImpl implements PhoneRepository {
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 }

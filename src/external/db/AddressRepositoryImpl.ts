@@ -7,8 +7,8 @@ export class AddressRepositoryImpl implements AddressRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.run(
-        "INSERT INTO ADDRESS (ROAD, NUMBER, COMPLEMENT, NEIGHBORHOOD, CEP, CITY, STATE, COUNTRY, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      const [result] = await db.execute(
+        "INSERT INTO address (ROAD, NUMBER, COMPLEMENT, NEIGHBORHOOD, CEP, CITY, STATE, COUNTRY, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           address.road,
           address.number,
@@ -22,11 +22,12 @@ export class AddressRepositoryImpl implements AddressRepository {
         ]
       );
 
-      return result.lastID!;
+      const insertId = (result as any).insertId;
+      return insertId;
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -34,11 +35,12 @@ export class AddressRepositoryImpl implements AddressRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.all("SELECT * FROM ADDRESS WHERE PERSON_ID = ?", [
-        id,
-      ]);
+      const [rows] = await db.execute(
+        "SELECT * FROM address WHERE PERSON_ID = ?",
+        [id]
+      );
 
-      const addresses = result.map(
+      const addresses = (rows as any[]).map(
         (row) =>
           new Address(
             row.id,
@@ -58,7 +60,7 @@ export class AddressRepositoryImpl implements AddressRepository {
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -66,8 +68,8 @@ export class AddressRepositoryImpl implements AddressRepository {
     const db = await getDatabaseConnection();
 
     try {
-      await db.run(
-        "UPDATE ADDRESS SET ROAD = ?, NUMBER = ?, COMPLEMENT = ?, NEIGHBORHOOD = ?, CEP = ?, CITY = ?, STATE = ?, COUNTRY = ?, PERSON_ID = ? WHERE ID = ?",
+      await db.execute(
+        "UPDATE address SET ROAD = ?, NUMBER = ?, COMPLEMENT = ?, NEIGHBORHOOD = ?, CEP = ?, CITY = ?, STATE = ?, COUNTRY = ?, PERSON_ID = ? WHERE ID = ?",
         [
           address.road,
           address.number,
@@ -84,7 +86,7 @@ export class AddressRepositoryImpl implements AddressRepository {
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -92,11 +94,11 @@ export class AddressRepositoryImpl implements AddressRepository {
     const db = await getDatabaseConnection();
 
     try {
-      await db.run("DELETE FROM ADDRESS WHERE ID = ?", [id]);
+      await db.execute("DELETE FROM address WHERE ID = ?", [id]);
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -104,12 +106,15 @@ export class AddressRepositoryImpl implements AddressRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.get("SELECT * FROM ADDRESS WHERE ID = ?", [id]);
+      const [rows] = await db.execute("SELECT * FROM address WHERE ID = ?", [
+        id,
+      ]);
 
-      if (!result) {
-        throw new Error("Address not found");
+      if ((rows as any[]).length === 0) {
+        throw new Error("Endereço não encontrado");
       }
 
+      const result = (rows as any[])[0];
       return new Address(
         result.id,
         result.road,
@@ -125,7 +130,7 @@ export class AddressRepositoryImpl implements AddressRepository {
     } catch (err) {
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 }

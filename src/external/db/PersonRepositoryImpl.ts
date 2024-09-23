@@ -7,34 +7,27 @@ export class PersonRepositoryImpl implements PersonRepository {
     const db = await getDatabaseConnection();
 
     try {
-      db.exec("BEGIN TRANSACTION");
+      await db.beginTransaction();
 
-      const result = await db.run(
-        "INSERT INTO PERSON (NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?)",
+      const [result] = await db.execute(
+        "INSERT INTO person (NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?)",
         [person.name, person.nickname, person.taxType, person.cpfCnpj]
       );
 
-      await db.run(
-        "INSERT INTO PERSON_COPY (ID, NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?, ?)",
-        [
-          result.lastID,
-          person.name,
-          person.nickname,
-          person.taxType,
-          person.cpfCnpj,
-        ]
+      const insertId = (result as any).insertId;
+      await db.execute(
+        "INSERT INTO person_copy (ID, NAME, NICKNAME, TAX_TYPE, CPF_CNPJ) VALUES (?, ?, ?, ?, ?)",
+        [insertId, person.name, person.nickname, person.taxType, person.cpfCnpj]
       );
 
-      db.exec("COMMIT");
-
-      return result.lastID!;
+      await db.commit();
+      return insertId;
     } catch (err) {
-      db.exec("ROLLBACK");
-
+      await db.rollback();
       console.error(err);
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -42,9 +35,9 @@ export class PersonRepositoryImpl implements PersonRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.all("SELECT * FROM PERSON");
+      const [rows] = await db.execute("SELECT * FROM person ORDER BY NAME");
 
-      const people = result.map(
+      const people = (rows as any[]).map(
         (row) =>
           new Person(row.id, row.name, row.nickname, row.tax_type, row.cpf_cnpj)
       );
@@ -54,7 +47,7 @@ export class PersonRepositoryImpl implements PersonRepository {
       console.error(err);
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -62,12 +55,15 @@ export class PersonRepositoryImpl implements PersonRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.get("SELECT * FROM PERSON WHERE ID = ?", [id]);
+      const [rows] = await db.execute("SELECT * FROM person WHERE ID = ?", [
+        id,
+      ]);
 
-      if (!result) {
+      if ((rows as any[]).length === 0) {
         return undefined;
       }
 
+      const result = (rows as any[])[0];
       const person = new Person(
         result.id,
         result.name,
@@ -81,7 +77,7 @@ export class PersonRepositoryImpl implements PersonRepository {
       console.error(err);
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -89,8 +85,8 @@ export class PersonRepositoryImpl implements PersonRepository {
     const db = await getDatabaseConnection();
 
     try {
-      await db.run(
-        "UPDATE PERSON SET NAME = ?, NICKNAME = ?, TAX_TYPE = ?, CPF_CNPJ = ? WHERE ID = ?",
+      await db.execute(
+        "UPDATE person SET NAME = ?, NICKNAME = ?, TAX_TYPE = ?, CPF_CNPJ = ? WHERE ID = ?",
         [
           person.name,
           person.nickname,
@@ -103,19 +99,20 @@ export class PersonRepositoryImpl implements PersonRepository {
       console.error(err);
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
+
   async delete(id: number): Promise<void> {
     const db = await getDatabaseConnection();
 
     try {
-      await db.run("DELETE FROM PERSON WHERE ID = ?", [id]);
+      await db.execute("DELETE FROM person WHERE ID = ?", [id]);
     } catch (err) {
       console.error(err);
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 
@@ -123,16 +120,17 @@ export class PersonRepositoryImpl implements PersonRepository {
     const db = await getDatabaseConnection();
 
     try {
-      const result = await db.get("SELECT * FROM PERSON WHERE CPF_CNPJ = ?", [
-        cpfCnpj,
-      ]);
+      const [rows] = await db.execute(
+        "SELECT * FROM person WHERE CPF_CNPJ = ?",
+        [cpfCnpj]
+      );
 
-      return !!result;
+      return (rows as any[]).length > 0;
     } catch (err) {
       console.error(err);
       throw err;
     } finally {
-      db.close();
+      await db.end();
     }
   }
 }

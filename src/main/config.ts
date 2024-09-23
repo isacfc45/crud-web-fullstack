@@ -1,16 +1,18 @@
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
+import mysql from "mysql2/promise";
 
 const options = {
-  filename: "./database.db",
-  driver: sqlite3.Database,
+  host: "mariadb-117845-0.cloudclusters.net",
+  port: 10060,
+  user: "crudweb",
+  password: "dijao298djaA",
+  database: "crudweb",
 };
 
 export const getDatabaseConnection = async () => {
   try {
-    const db = await open(options);
-    console.log("Conexão com o banco de dados SQLite estabelecida!");
-    return db;
+    const connection = await mysql.createConnection(options);
+    console.log("Conexão com o banco de dados MySQL estabelecida!");
+    return connection;
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error("Erro ao conectar com o banco de dados:", err.message);
