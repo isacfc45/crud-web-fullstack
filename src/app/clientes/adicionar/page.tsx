@@ -10,7 +10,9 @@ import { z } from "zod";
 import InputSelect from "@/components/Input/InputSelect";
 
 const CreateCliente = () => {
-  const [person, setPerson] = useState<Person>(new Person(0, "", "", "", ""));
+  const [person, setPerson] = useState<Person>(
+    new Person(0, "", "", "Física", "")
+  );
   const [confirmDuplicate, setConfirmDuplicate] = useState(false);
   const router = useRouter();
 
@@ -56,8 +58,8 @@ const CreateCliente = () => {
       const checkCpfCnpjData = await checkCpfCnpj.json();
 
       if (checkCpfCnpjData.exists) {
-        const confirmDuplicate = window.confirm(
-          "CPF/CNPJ já cadastrado. Deseja continuar?"
+        setConfirmDuplicate(
+          window.confirm("CPF/CNPJ já cadastrado. Deseja continuar?")
         );
 
         if (!confirmDuplicate) {

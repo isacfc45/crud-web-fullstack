@@ -27,7 +27,7 @@ export class PersonRepositoryImpl implements PersonRepository {
 
       db.exec("COMMIT");
 
-      return result.lastID;
+      return result.lastID!;
     } catch (err) {
       db.exec("ROLLBACK");
 

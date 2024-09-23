@@ -22,7 +22,7 @@ export class AddressRepositoryImpl implements AddressRepository {
         ]
       );
 
-      return result.lastID;
+      return result.lastID!;
     } catch (err) {
       throw err;
     } finally {

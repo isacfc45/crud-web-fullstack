@@ -1,13 +1,13 @@
 import { phoneController } from "@/main/server";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next/server";
 
-export const POST = async (req: NextApiRequest) => {
+export const POST = async (req: NextRequest) => {
   const data = await new Response(req.body).json();
   return Response.json(await phoneController.create(data));
 };
 
 export const GET = async (
-  req: NextApiRequest,
+  req: NextRequest,
   context: { params: { id: string } }
 ) => {
   const id = Number(context.params.id || 0);
