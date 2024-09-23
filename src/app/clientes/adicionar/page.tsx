@@ -22,7 +22,7 @@ const CreateCliente = () => {
     taxType: z.string().min(1, { message: "Tipo Fiscal é obrigatório" }),
     cpfCnpj: z
       .string()
-      .nonempty({ message: "CPF/CNPJ é obrigatório" })
+      .min(1, { message: "CPF/CNPJ é obrigatório" })
       .regex(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, "CPF/CNPJ inválido"),
   });
 
