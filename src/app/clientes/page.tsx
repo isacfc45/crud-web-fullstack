@@ -11,8 +11,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 const Clientes = () => {
   const [people, setPeople] = useState<Person[]>([]);
-
-  const headers = ["ID", "Nome", "Tipo Fiscal", "CPF/CNPJ", "Ações"];
+  const headers = ["ID", "Nome", "Apelido", "Tipo Fiscal", "CPF/CNPJ", "Ações"];
 
   useEffect(() => {
     async function fetchPeople() {
@@ -54,6 +53,7 @@ const Clientes = () => {
   const rows = people.map((person) => ({
     id: person.id,
     name: person.name,
+    nickname: person.nickname,
     taxType: person.taxType,
     cpfCnpj: person.cpfCnpj,
     acoes: (
